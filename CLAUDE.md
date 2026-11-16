@@ -25,4 +25,17 @@ Meta4 Solutions (createyourmeta-iv.com), launching "Ready-made Awards" for the Q
 - Ask before sending or publishing anything.
 - Log every change in this week's work log (work-log/YYYY-Www.md).
 
+## Skills (.claude/skills/, from bolaji-ships/gtm-starter-kit; credits in THIRD-PARTY.md)
+- Strategy: `signal-matrix` (ICP/signal matrix), `campaign-strategy` (15-25 campaign ideas), `build-workflow-spec` (approved workflow spec, no copy).
+- Copy: `campaign-copy` (cold email and LinkedIn DM copy, gated on an approved spec), `prompt-builder` (per-row AI prompts).
+- Clay build: `campaign-contract` -> `design-clay-table-json` -> `import-clay-table` -> `save-clay-schema`; `build-clay` (build or audit a full workbook).
+- Clay cost and data: `calculate-costs`, `workspace-cost-audit`, `export-tables` (to local CSV, gitignored).
+- QA and deliverability: `campaign-qa` (Leadash via exports, Option L), `leadash-inbox-placement-test` (Leadash + MailReach; use this), `inbox-placement-test` (Bison original, reference only).
+- Research and visuals: `crawl4ai` (crawl sites to Markdown), `agent-browser` (drive a browser), `miro-gtm-flowchart` (needs Miro connected).
+
 ## Tools
+- Clay: enrichment, list building and AI columns. Most skills above run on it.
+- Leadash: cold email sending. No verified public API docs, so Leadash steps run in the app or from CSV exports. Add docs to context/docs/research/ to unlock an API path.
+- Google Sheets: shared lists and reporting.
+- `tools/rex/`: unofficial Clay API client (uses your browser session) plus the ClayLens cost extension. Keep session files out of Git.
+- `tools/crawl4ai/`, `tools/agent-browser/`: setup notes for the local crawler and browser tools.

@@ -1,0 +1,28 @@
+{
+  "date_label": "Nov 16 2026",
+  "seedlist": 1,
+  "work_seeds_only": false,
+
+  "copy_notes": "Paste the approved subject and body here for the record. Swap {FIRST_NAME} for Leadash's own first-name variable when you paste into Leadash.",
+  "copy": {
+    "subject": "{subject variant A|subject variant B|subject variant C}",
+    "body": "{Hi|Hey} {FIRST_NAME},\n\n<line 1 with spintax>\n\n<line 2 with spintax>\n\n{Best|Thanks},\n<signature>"
+  },
+
+  "pools": [
+    {
+      "key": "pool-a",
+      "name": "Pool A (Google inboxes, vendor X)",
+      "segment": "GW",
+      "inboxes": 6,
+      "leadash_campaign": "paste the Leadash campaign name or URL after you build it"
+    },
+    {
+      "key": "pool-b",
+      "name": "Pool B (Microsoft inboxes, vendor Y)",
+      "segment": "M365",
+      "inboxes": 4,
+      "leadash_campaign": ""
+    }
+  ]
+}
