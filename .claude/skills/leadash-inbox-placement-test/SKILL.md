@@ -9,10 +9,12 @@ argument-hint: "[Leadash workspace name]"
 Adapted from `inbox-placement-test` (EmailBison + MailReach) for Leadash. The
 method, MailReach API calls and scoring are unchanged. What changed:
 
-- **Leadash steps are manual, in the Leadash app.** We found no public Leadash
-  API documentation, so this skill never guesses Leadash endpoints. If the
-  operator later shares Leadash API docs, add a scripted path here and cite the
-  docs page.
+- **Leadash steps run through the Leadash MCP connector** (`leadash` in
+  `.mcp.json`, https://www.leadash.com/api/mcp) when it is connected and
+  authorized. Find its tools with ToolSearch ("leadash"), read each tool's
+  schema before calling it, and never guess a tool or field. Every create,
+  update or launch call needs the operator's explicit go first. If the
+  connector is not authorized, do the same steps manually in the Leadash app.
 - **One script** (`scripts/placement.py`) runs the MailReach side: create
   tests, write the seed upload CSV, poll, score.
 
@@ -71,10 +73,12 @@ This saves each pool's `mlrch-` tag to `.placement_state.json` and writes
 `leadash_seed_upload.csv` (email, first_name; blank first names backfilled).
 Same `seedlist` for every pool, so every campaign gets the same seeds.
 
-## Step 5 - build one Leadash campaign per pool (operator, in the Leadash app)
+## Step 5 - build one Leadash campaign per pool
 
-Walk the operator through it, pool by pool, and record each campaign name or
-URL in `config.json` under `leadash_campaign`. Mirror the Bison test settings:
+Via the Leadash connector if authorized (show the operator each campaign's
+settings before creating it), otherwise walk the operator through the app pool
+by pool. Record each campaign name or ID in `config.json` under
+`leadash_campaign`. Mirror the Bison test settings:
 
 | Setting | Value | Why |
 |---|---|---|
@@ -86,14 +90,35 @@ URL in `config.json` under `leadash_campaign`. Mirror the Bison test settings:
 | Link tracking | Off, and no links in the body | No tracked links |
 | Unsubscribe link or footer | Off for this test | Seeds, not prospects |
 | Senders | Only this pool's inboxes; no inbox in two pools | Overlap confounds results |
-| Leads | Upload `leadash_seed_upload.csv`; map first name | Every seed gets one email |
+| Leads | Upload `leadash_seed_upload.csv`; map `normalized_first_name` to the custom variable of the same name | Every seed gets one email |
 | Daily new-lead limit | At least the seed count | All seeds go out in one pass |
 | Lead priority | New leads first, if Leadash offers it | Step 1 fires immediately |
 | Send window | Starts now, 60+ min, weekdays | Each inbox needs time per round |
 | Warm-up | Leave as it is in production | Test real conditions |
 
-Use Leadash's own first-name variable (check its variable picker) in place of
-`{FIRST_NAME}`, and its own spintax syntax if it differs.
+**Leadash syntax** (from our production copy):
+
+- Spintax: single braces, pipe-separated: `{Hi|Hello}`, `{Best|Cheers}`.
+- Variables: double braces with the `custom:` prefix: `{{custom:normalized_first_name}}`.
+- First name: `{{custom:normalized_first_name}}`. The seed CSV's
+  `normalized_first_name` column maps to it on upload.
+- Never put a `custom:` variable the seeds lack (company, first line, jargon)
+  in the test copy: render those as static text.
+
+Example test body:
+
+```
+{Hi|Hello} {{custom:normalized_first_name}},
+
+<static line 1 with {spintax|variants}>
+
+<static line 2 with {spintax|variants}>
+
+{Best|Cheers},
+<signature>
+
+mlrch-XXXXXXXX
+```
 
 ## Step 6 - QA gate, then the operator's launch gate
 

@@ -398,10 +398,17 @@ Five modes: **Leadash** (our sequencer, see Option L first), **Instantly API** (
 
 ### Option L: Leadash review (our default sequencer)
 
-Leadash settings mirror Instantly's, so run the same checks as Option A. The difference is how the data gets in: we have no verified Leadash API docs, so never guess Leadash endpoints. Use exports instead. If the operator later shares Leadash API docs, add an API path here (key in `.env` as `LEADASH_API_KEY`, never echoed) and cite the docs page.
+Leadash settings mirror Instantly's, so run the same checks as Option A.
 
-1. **Templates:** ask the operator to paste each step's subject and body exactly as entered in Leadash (all steps, all variants, raw, with variables and spintax), or share the sequence view. Note Leadash's variable syntax from the paste, and use it when resolving.
-2. **Leads:** ask for the campaign's lead export (CSV) with all custom variables. Save it under `output/campaigns/<wf-slug>/` (CSVs are gitignored). If a custom column is missing from the export, ask for one lead's detail view before flagging it MISSING: a column absent from an export is not proof the variable is blank.
+**Getting the data:** use the Leadash MCP connector (`leadash` in `.mcp.json`) when it is connected: find its tools with ToolSearch ("leadash"), read each schema, and use read-only tools only during QA. Never guess a tool or field. If the connector is not authorized, fall back to the operator pasting templates and sharing a lead export.
+
+**Leadash syntax** (from our production copy):
+- Spintax: single braces, pipe-separated: `{Hi|Hello}`. Resolve by picking an option.
+- Variables: double braces with a `custom:` prefix: `{{custom:normalized_first_name}}`, `{{custom:first_line}}`, `{{custom:jargon_vacancy}}`, `{{custom:normalized_company}}`. Each maps to a lead field of the same name (without `custom:`).
+- FAIL on: `{{` without a `custom:` prefix (unless the spec names a Leadash system variable), single-brace groups without a `|` (a broken variable, not spintax), or a `custom:` name that no lead field matches.
+
+1. **Templates:** pull every step's subject and body (all steps, all variants, raw, with variables and spintax), via the connector or the operator's paste.
+2. **Leads:** pull the campaign's leads with all custom variables, via the connector or a CSV export. Save it under `output/campaigns/<wf-slug>/` (CSVs are gitignored). If a custom column is missing from the export, ask for one lead's detail view before flagging it MISSING: a column absent from an export is not proof the variable is blank.
 3. **Resolve** every variable for every lead across every step; pick the first spintax option.
 4. **Run the checks** from Option A: template syntax (balanced braces, no empty spintax options, no unknown variables), variable completeness, blank artifacts and double spaces, duplicate emails, same-company cap, and leads already in another live Leadash campaign (dedup).
 5. **Settings check** against the spec: plain text vs HTML, open and link tracking, unsubscribe footer, daily limits, send window, sender inboxes attached and connected.

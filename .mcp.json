@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "leadash": {
+      "type": "http",
+      "url": "https://www.leadash.com/api/mcp"
+    }
+  }
+}

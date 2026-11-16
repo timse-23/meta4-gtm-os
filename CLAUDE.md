@@ -35,7 +35,7 @@ Meta4 Solutions (createyourmeta-iv.com), launching "Ready-made Awards" for the Q
 
 ## Tools
 - Clay: enrichment, list building and AI columns. Most skills above run on it.
-- Leadash: cold email sending. No verified public API docs, so Leadash steps run in the app or from CSV exports. Add docs to context/docs/research/ to unlock an API path.
+- Leadash: cold email sending. MCP connector `leadash` (.mcp.json, https://www.leadash.com/api/mcp); authorize via /mcp. Syntax: `{a|b}` spintax, `{{custom:field}}` variables. Ask before any create, launch or send.
 - Google Sheets: shared lists and reporting.
 - `tools/rex/`: unofficial Clay API client (uses your browser session) plus the ClayLens cost extension. Keep session files out of Git.
 - `tools/crawl4ai/`, `tools/agent-browser/`: setup notes for the local crawler and browser tools.

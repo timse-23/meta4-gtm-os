@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Leadash + MailReach inbox placement test: the MailReach half, automated.
 
-Leadash has no public API documentation we could verify, so every Leadash step
-(campaign build, settings, senders, seed upload, launch) is done by the operator
-in the Leadash app, following SKILL.md. This script does only the parts that run
-against MailReach's documented API, adapted from inbox-placement-test/scripts.
+Leadash steps (campaign build, settings, senders, seed upload, launch) run
+through the Leadash MCP connector or the Leadash app, following SKILL.md. This
+script does only the parts that run against MailReach's documented API,
+adapted from inbox-placement-test/scripts.
 
 Stdlib only. Every command that spends or creates is dry-run unless armed.
 
@@ -202,7 +202,8 @@ def cmd_create():
     rows = [s for s in seeds if is_work(s)] if work_only else seeds
     with open(SEEDS_CSV, "w", newline="") as fh:
         w = csv.writer(fh)
-        w.writerow(["email", "first_name"])
+        # Column maps to Leadash's {{custom:normalized_first_name}} on upload.
+        w.writerow(["email", "normalized_first_name"])
         for s in rows:
             w.writerow([s.get("email"), first_name_for(s)])
     print(f"\nSaved tags to {STATE_PATH}")
